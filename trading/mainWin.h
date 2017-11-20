@@ -58,6 +58,7 @@ namespace trading {
 		/// Required designer variable.
 		/// </summary>
 
+
 		void updateLabel(double up_price, double up_day, double down_price, double down_day) {
 			
 			Console::WriteLine(Convert::ToString(up_price));
