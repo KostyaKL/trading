@@ -1,6 +1,7 @@
-#include "mainWin.h"
 #include <iostream>
 #include <fstream>
+#include "mainWin.h"
+#include "methods.h"
 
 using namespace std;
 

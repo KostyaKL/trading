@@ -23,11 +23,16 @@
     <ClInclude Include="mainWin.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="methods.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="classes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="methods.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="mainWin.resx">
+      <Filter>Resource Files</Filter>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

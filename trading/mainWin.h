@@ -24,8 +24,6 @@ namespace trading {
 	public ref class mainWin : public System::Windows::Forms::Form
 	{
 	public:
-		static mainWin^ win;
-
 		mainWin(void)
 		{
 			InitializeComponent();
@@ -34,8 +32,75 @@ namespace trading {
 			//
 			file_open(db);
 		}
+
+		//void test();
 		
-		
+		void avgVol(ifstream &file, double &up_price, double &down_price, double &up_day, double &down_day) {
+			char *data;
+			LINE today, yesterday, day_bef;
+			double upC, downC;
+			int flag = 1;
+
+
+
+			up_price = 0;
+			down_price = 0;
+			up_day = 0;
+			down_day = 0;
+			upC = 0;
+			downC = 0;
+
+			data = read_line(file);
+			today.update_line(data, 1);
+			day_bef = yesterday = today;
+			for (int i = 2;i <= 4978;) {
+				if (today.getCP() > yesterday.getCP()) {
+					up_price += (today.getCP() - yesterday.getCP());
+					while (today.getCP() > yesterday.getCP() && i <= 4978) {
+						up_day++;
+						i++;
+
+						yesterday = today;
+						data = read_line(file);
+						today.update_line(data, i);
+
+						updateLabel(up_price, up_day, down_price, down_day);
+					}
+					upC++;
+				}
+				else if (today.getCP() < yesterday.getCP()) {
+					down_price += (yesterday.getCP() - today.getCP());
+					while (today.getCP() < yesterday.getCP() && i <= 4978) {
+						down_day++;
+						i++;
+
+						yesterday = today;
+						data = read_line(file);
+						today.update_line(data, i);
+
+						updateLabel(up_price, up_day, down_price, down_day);
+					}
+					downC++;
+				}
+
+				else {
+					yesterday = today;
+					data = read_line(file);
+					today.update_line(data, i);
+					i++;
+				}
+			}
+
+			up_price /= upC;
+			up_day /= upC;
+			down_price /= downC;
+			down_day /= downC;
+
+			updateLabel(up_price, up_day, down_price, down_day);
+
+			delete[] data;
+		}
+
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
@@ -63,16 +128,23 @@ namespace trading {
 
 		void updateLabel(double up_price, double up_day, double down_price, double down_day) {
 
+			static int i = 0;
+
 			priceMod(up_price);
 			priceMod(down_price);
 
-			Console::WriteLine(Convert::ToString(up_price));
-			Console::WriteLine(Convert::ToString("hello\nworld"));
+			//Console::WriteLine(Convert::ToString(up_price));
+			//Console::WriteLine(Convert::ToString("hello\nworld"));
 
 			upPrice->Text = Convert::ToString(up_price);
+			//upPrice->Refresh();
 			upDays->Text = Convert::ToString(round(up_day));
 			downPrice->Text = Convert::ToString(down_price);
 			downDays->Text = Convert::ToString(round(down_day));
+			i++;
+			if (!(i % 100)) {
+				this->Refresh();
+			}
 		}
 
 		System::ComponentModel::Container ^components;
@@ -157,8 +229,9 @@ namespace trading {
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 		double up_price, down_price, up_day, down_day;
 		avgVol(db, up_price, down_price, up_day, down_day);
-		updateLabel(up_price, up_day, down_price, down_day);
+		//updateLabel(up_price, up_day, down_price, down_day);
 		//newDB();
+		//test();
 	}
 };
 }
