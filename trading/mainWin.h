@@ -18,9 +18,13 @@ namespace trading {
 	/// <summary>
 	/// Summary for mainWin
 	/// </summary>
+
+	
+
 	public ref class mainWin : public System::Windows::Forms::Form
 	{
 	public:
+		static mainWin^ win;
 
 		mainWin(void)
 		{
@@ -30,9 +34,8 @@ namespace trading {
 			//
 			file_open(db);
 		}
-
 		
-
+		
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
@@ -58,15 +61,18 @@ namespace trading {
 		/// Required designer variable.
 		/// </summary>
 
-
 		void updateLabel(double up_price, double up_day, double down_price, double down_day) {
-			
+
+			priceMod(up_price);
+			priceMod(down_price);
+
 			Console::WriteLine(Convert::ToString(up_price));
+			Console::WriteLine(Convert::ToString("hello\nworld"));
 
 			upPrice->Text = Convert::ToString(up_price);
-			upDays->Text = Convert::ToString(up_day);
+			upDays->Text = Convert::ToString(round(up_day));
 			downPrice->Text = Convert::ToString(down_price);
-			downDays->Text = Convert::ToString(down_day);
+			downDays->Text = Convert::ToString(round(down_day));
 		}
 
 		System::ComponentModel::Container ^components;
