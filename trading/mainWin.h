@@ -27,6 +27,7 @@ namespace trading {
 			//
 			//TODO: Add the constructor code here
 			//
+			newDB();
 		}
 		
 		void avgVol(ifstream &file, double &up_price, double &down_price, double &up_day, double &down_day);

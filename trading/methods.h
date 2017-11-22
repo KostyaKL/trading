@@ -67,21 +67,21 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
 	return 0;
 }
 
-	/*void newDB() {
-		sqlite3 *db;
-		char *sql;
-		char *err = 0;
+void newDB() {
+	sqlite3 *db;
+	char *sql;
+	char *err = 0;
 
 
-		sqlite3_open("test.db", &db);
-		sql = "CREATE TABLE COMPANY("  \
-			"ID INT PRIMARY KEY     NOT NULL," \
-			"NAME           TEXT    NOT NULL," \
-			"AGE            INT     NOT NULL," \
-			"ADDRESS        CHAR(50)," \
-			"SALARY         REAL );";
-		sqlite3_exec(db, sql, callback, 0, &err);
-		sqlite3_close(db);
-	}*/
+	sqlite3_open("test.db", &db);
+	sql = "CREATE TABLE COMPANY("  \
+		"ID INT PRIMARY KEY     NOT NULL," \
+		"NAME           TEXT    NOT NULL," \
+		"AGE            INT     NOT NULL," \
+		"ADDRESS        CHAR(50)," \
+		"SALARY         REAL );";
+	sqlite3_exec(db, sql, callback, 0, &err);
+	sqlite3_close(db);
+}
 
 ///sql///
