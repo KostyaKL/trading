@@ -1,20 +1,10 @@
 #pragma once
 #include <iostream>
 #include <fstream>
-//#include "mainWin.h"
 #include "classes.h"
 #include "sqlite3.h"
 
-
 using namespace std;
-using namespace System;
-using namespace System::Windows::Forms;
-
-//namespace trading {
-//	void test() {
-//		cout << "test" << endl;
-//	}
-//}
 
 void file_open(ifstream &file) {
 	file.open("gpb usd nov 17.csv");
@@ -66,90 +56,16 @@ void priceMod(double &price) {
 	price += tmp;
 }
 
-void cprint(double up_price, double up_day, double down_price, double down_day) {
-	priceMod(up_price);
-	priceMod(down_price);
+///sql///
 
-	cout << up_price<<","
-		<< up_day<< ","
-		<< down_price <<","<<
-		down_day << endl;
-}
-
-//void avgVol(ifstream &file, double &up_price, double &down_price, double &up_day, double &down_day) {
-//	char *data;
-//	LINE today, yesterday, day_bef;
-//	double upC, downC;
-//	int flag = 1;
-//
-//
-//
-//	up_price = 0;
-//	down_price = 0;
-//	up_day = 0;
-//	down_day = 0;
-//	upC = 0;
-//	downC = 0;
-//
-//	data = read_line(file);
-//	today.update_line(data, 1);
-//	day_bef = yesterday = today;
-//	for (int i = 2;i <= 4978;) {
-//		if (today.getCP() > yesterday.getCP()) {
-//			up_price += (today.getCP() - yesterday.getCP());
-//			while (today.getCP() > yesterday.getCP() && i <= 4978) {
-//				up_day++;
-//				i++;
-//
-//				yesterday = today;
-//				data = read_line(file);
-//				today.update_line(data, i);
-//
-//				cprint(up_price, up_day, down_price, down_day);
-//			}
-//			upC++;
-//		}
-//		else if (today.getCP() < yesterday.getCP()) {
-//			down_price += (yesterday.getCP() - today.getCP());
-//			while (today.getCP() < yesterday.getCP() && i <= 4978) {
-//				down_day++;
-//				i++;
-//
-//				yesterday = today;
-//				data = read_line(file);
-//				today.update_line(data, i);
-//
-//				cprint(up_price, up_day, down_price, down_day);
-//			}
-//			downC++;
-//		}
-//
-//		else {
-//			yesterday = today;
-//			data = read_line(file);
-//			today.update_line(data, i);
-//			i++;
-//		}
-//	}
-//
-//	up_price /= upC;
-//	up_day /= upC;
-//	down_price /= downC;
-//	down_day /= downC;
-//
-//	cprint(up_price, up_day, down_price, down_day);
-//
-//	delete[] data;
-//}
-
-	static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
-		int i;
-		for (i = 0; i<argc; i++) {
-			printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-		}
-		printf("\n");
-		return 0;
+static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
+	int i;
+	for (i = 0; i < argc; i++) {
+		printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
 	}
+	printf("\n");
+	return 0;
+}
 
 	/*void newDB() {
 		sqlite3 *db;
@@ -167,3 +83,5 @@ void cprint(double up_price, double up_day, double down_price, double down_day) 
 		sqlite3_exec(db, sql, callback, 0, &err);
 		sqlite3_close(db);
 	}*/
+
+///sql///

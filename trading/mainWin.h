@@ -7,7 +7,6 @@ using namespace std;
 ifstream db;
 
 namespace trading {
-
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -19,8 +18,6 @@ namespace trading {
 	/// Summary for mainWin
 	/// </summary>
 
-	
-
 	public ref class mainWin : public System::Windows::Forms::Form
 	{
 	public:
@@ -30,95 +27,27 @@ namespace trading {
 			//
 			//TODO: Add the constructor code here
 			//
-			file_open(db);
 		}
-
-		//void test();
 		
-		void avgVol(ifstream &file, double &up_price, double &down_price, double &up_day, double &down_day) {
-			char *data;
-			LINE today, yesterday, day_bef;
-			double upC, downC;
-			int flag = 1;
-
-
-
-			up_price = 0;
-			down_price = 0;
-			up_day = 0;
-			down_day = 0;
-			upC = 0;
-			downC = 0;
-
-			data = read_line(file);
-			today.update_line(data, 1);
-			day_bef = yesterday = today;
-			for (int i = 2;i <= 4978;) {
-				if (today.getCP() > yesterday.getCP()) {
-					up_price += (today.getCP() - yesterday.getCP());
-					while (today.getCP() > yesterday.getCP() && i <= 4978) {
-						up_day++;
-						i++;
-
-						yesterday = today;
-						data = read_line(file);
-						today.update_line(data, i);
-
-						updateLabel(up_price, up_day, down_price, down_day);
-					}
-					upC++;
-				}
-				else if (today.getCP() < yesterday.getCP()) {
-					down_price += (yesterday.getCP() - today.getCP());
-					while (today.getCP() < yesterday.getCP() && i <= 4978) {
-						down_day++;
-						i++;
-
-						yesterday = today;
-						data = read_line(file);
-						today.update_line(data, i);
-
-						updateLabel(up_price, up_day, down_price, down_day);
-					}
-					downC++;
-				}
-
-				else {
-					yesterday = today;
-					data = read_line(file);
-					today.update_line(data, i);
-					i++;
-				}
-			}
-
-			up_price /= upC;
-			up_day /= upC;
-			down_price /= downC;
-			down_day /= downC;
-
-			updateLabel(up_price, up_day, down_price, down_day);
-
-			delete[] data;
-		}
+		void avgVol(ifstream &file, double &up_price, double &down_price, double &up_day, double &down_day);
 
 	protected:
 		/// <summary>
 		/// Clean up any resources being used.
 		/// </summary>
-
 		~mainWin()
 		{
 			if (components)
 			{
 				delete components;
 			}
-			file_close(db);
 		}
 	private: System::Windows::Forms::Label^  upPrice;
 	private: System::Windows::Forms::Label^  downPrice;
 	private: System::Windows::Forms::Label^  upDays;
 	private: System::Windows::Forms::Label^  downDays;
 	private: System::Windows::Forms::Button^  button1;
+	
 	protected:
 
 	private:
@@ -126,26 +55,7 @@ namespace trading {
 		/// Required designer variable.
 		/// </summary>
 
-		void updateLabel(double up_price, double up_day, double down_price, double down_day) {
-
-			static int i = 0;
-
-			priceMod(up_price);
-			priceMod(down_price);
-
-			//Console::WriteLine(Convert::ToString(up_price));
-			//Console::WriteLine(Convert::ToString("hello\nworld"));
-
-			upPrice->Text = Convert::ToString(up_price);
-			//upPrice->Refresh();
-			upDays->Text = Convert::ToString(round(up_day));
-			downPrice->Text = Convert::ToString(down_price);
-			downDays->Text = Convert::ToString(round(down_day));
-			i++;
-			if (!(i % 100)) {
-				this->Refresh();
-			}
-		}
+		void updateLabel(double up_price, double up_day, double down_price, double down_day);
 
 		System::ComponentModel::Container ^components;
 
@@ -228,10 +138,9 @@ namespace trading {
 #pragma endregion
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 		double up_price, down_price, up_day, down_day;
+		file_open(db);
 		avgVol(db, up_price, down_price, up_day, down_day);
-		//updateLabel(up_price, up_day, down_price, down_day);
-		//newDB();
-		//test();
+		file_close(db);
 	}
 };
 }
