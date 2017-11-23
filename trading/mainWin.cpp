@@ -2,6 +2,7 @@
 #include <fstream>
 #include "mainWin.h"
 #include "methods.h"
+#include "sqlite3.h"
 
 using namespace std;
 
@@ -19,10 +20,12 @@ void main() {
 }
 
 void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_price, double &up_day, double &down_day) {
-	char *data;
-	LINE today, yesterday, day_bef;
+	char *data= new char[50];
+	LINE today, yesterday;
 	double upC, downC;
 	int flag = 1;
+
+	
 
 	up_price = 0;
 	down_price = 0;
@@ -31,9 +34,13 @@ void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_pri
 	upC = 0;
 	downC = 0;
 
-	data = read_line(file);
+	
+
+	//data = read_line(file);
+	sql_read_line(1);
+	strcpy(data, ret.c_str());
 	today.update_line(data, 1);
-	day_bef = yesterday = today;
+	//day_bef = yesterday = today;
 	for (int i = 2;i <= 4978;) {
 		if (today.getCP() > yesterday.getCP()) {
 			up_price += (today.getCP() - yesterday.getCP());
@@ -42,7 +49,9 @@ void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_pri
 				i++;
 
 				yesterday = today;
-				data = read_line(file);
+				//data = read_line(file);
+				sql_read_line(i);
+				strcpy(data, ret.c_str());
 				today.update_line(data, i);
 
 				updateLabel(up_price, up_day, down_price, down_day);
@@ -56,7 +65,9 @@ void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_pri
 				i++;
 
 				yesterday = today;
-				data = read_line(file);
+				//data = read_line(file);
+				sql_read_line(i);
+				strcpy(data, ret.c_str());
 				today.update_line(data, i);
 
 				updateLabel(up_price, up_day, down_price, down_day);
@@ -65,7 +76,9 @@ void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_pri
 		}
 		else {
 			yesterday = today;
-			data = read_line(file);
+			//data = read_line(file);
+			sql_read_line(i);
+			strcpy(data, ret.c_str());
 			today.update_line(data, i);
 			i++;
 		}
@@ -79,6 +92,8 @@ void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_pri
 	updateLabel(up_price, up_day, down_price, down_day);
 
 	delete[] data;
+
+	
 }
 
 void trading::mainWin::updateLabel(double up_price, double up_day, double down_price, double down_day) {

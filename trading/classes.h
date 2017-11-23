@@ -1,4 +1,10 @@
 #pragma once
+
+#include <iostream>
+
+#include <string>
+using namespace std;
+
 double getPrice(char *data, int &j, int line);
 
 class DATE {
@@ -23,10 +29,44 @@ public:
 
 	}
 
-	void get(char *in) {
+	void set(char *in) {
 		day = (in[0]-48)*10 + in[1] - 48;
 		month = (in[3] - 48) * 10 + in[4] - 48;
 		year = (in[6]-48)*1000 + (in[7]-48)*100 + (in[8]-48)*10 + in[9] - 48;
+	}
+
+	int getD() {
+		return day;
+	}
+
+	int getM() {
+		return month;
+	}
+
+	int getY() {
+		return year;
+	}
+
+	void get(char *ret) {
+		string tmp;
+		string d, m, y;
+	
+		if (day / 10)
+			d = to_string(day);
+		else
+			d = "0" + to_string(day);
+
+		if (month / 10)
+			m = to_string(month);
+		else
+			m = "0" + to_string(month);
+
+		y = to_string(year);
+
+
+		//tmp = to_string(day) + "/" + to_string(month) + "/" + to_string(year);
+		tmp = d + "/" + m + "/" + y;
+		strcpy(ret, tmp.c_str());
 	}
 
 
@@ -105,9 +145,13 @@ public:
 		return day_low;
 	}
 
+	DATE getDate() {
+		return date;
+	}
+
 	void update_line(char *data, int i) {
 		int j = 11;
-		date.get(data);
+		date.set(data);
 		close_price = getPrice(data, j, i);
 		open_price = getPrice(data, j, i);
 		day_high = getPrice(data, j, i);

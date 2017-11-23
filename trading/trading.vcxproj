@@ -131,6 +131,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mainWin.cpp" />
+    <ClCompile Include="sqlite3.c">
+      <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</CompileAsManaged>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsC</CompileAs>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="classes.h" />
@@ -138,6 +142,7 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="methods.h" />
+    <ClInclude Include="sqlite3.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="mainWin.resx">
