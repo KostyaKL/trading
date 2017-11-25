@@ -5,7 +5,10 @@
 #include <string>
 using namespace std;
 
-double getPrice(char *data, int &j, int line);
+string dbLine;
+
+
+double getPrice(int &j, int line);
 
 class DATE {
 public:
@@ -29,10 +32,10 @@ public:
 
 	}
 
-	void set(char *in) {
-		day = (in[0]-48)*10 + in[1] - 48;
-		month = (in[3] - 48) * 10 + in[4] - 48;
-		year = (in[6]-48)*1000 + (in[7]-48)*100 + (in[8]-48)*10 + in[9] - 48;
+	void set() {
+		day = (dbLine[0]-48)*10 + dbLine[1] - 48;
+		month = (dbLine[3] - 48) * 10 + dbLine[4] - 48;
+		year = (dbLine[6]-48)*1000 + (dbLine[7]-48)*100 + (dbLine[8]-48)*10 + dbLine[9] - 48;
 	}
 
 	int getD() {
@@ -47,8 +50,8 @@ public:
 		return year;
 	}
 
-	void get(char *ret) {
-		string tmp;
+	string get() {
+		string ret;
 		string d, m, y;
 	
 		if (day / 10)
@@ -63,10 +66,8 @@ public:
 
 		y = to_string(year);
 
-
-		//tmp = to_string(day) + "/" + to_string(month) + "/" + to_string(year);
-		tmp = d + "/" + m + "/" + y;
-		strcpy(ret, tmp.c_str());
+		ret = d + "/" + m + "/" + y;
+		return ret;
 	}
 
 
@@ -149,13 +150,13 @@ public:
 		return date;
 	}
 
-	void update_line(char *data, int i) {
+	void update_line(int i) {
 		int j = 11;
-		date.set(data);
-		close_price = getPrice(data, j, i);
-		open_price = getPrice(data, j, i);
-		day_high = getPrice(data, j, i);
-		day_low = getPrice(data, j, i);
+		date.set();
+		close_price = getPrice(j, i);
+		open_price = getPrice(j, i);
+		day_high = getPrice(j, i);
+		day_low = getPrice(j, i);
 	}
 
 private:

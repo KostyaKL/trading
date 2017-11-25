@@ -7,7 +7,7 @@
 
 using namespace std;
 
-string ret;
+
 
 void file_open(ifstream &file) {
 	file.open("gpb usd nov 17.csv");
@@ -24,22 +24,22 @@ char *read_line(ifstream &file) {
 	return data;
 }
 
-double getPrice(char *data,  int &j, int line) {
+double getPrice(int &j, int line) {
 	int flag, div;
 	double tmp, price;
 	div = 10;
 	flag = 1;
 	price = 0;
-	while (data[j] != ',' && j <= 50) {
-		if (data[j] == '.') {
+	while (dbLine[j] != ',' && j <= 50) {
+		if (dbLine[j] == '.') {
 			flag = 0;
 			j++;
 		}
 		if (flag) {
-			price+=data[j] - 48;
+			price+= dbLine[j] - 48;
 		}
 		else {
-			tmp = data[j] - 48;
+			tmp = dbLine[j] - 48;
 			price+=(tmp / div);
 			div *= 10;
 		}
@@ -63,11 +63,11 @@ void priceMod(double &price) {
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName) {
 	int i;
-	ret.clear();
+	dbLine.clear();
 	for (i = 1; i < argc; i++) {
 		//printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
 		//cout << (argv[i] ? argv[i] : "NULL") << ",";
-		ret = ret + (argv[i] ? argv[i] : "NULL") + ",";
+		dbLine = dbLine + (argv[i] ? argv[i] : "NULL") + ",";
 	}
 	//printf("\n");
 	return 0;
@@ -103,9 +103,9 @@ void newDB() {
 		string input, num;
 
 		data = read_line(file);
-		line.update_line(data, i);
+		line.update_line(i);
 
-		line.getDate().get(date);
+		line.getDate().get();
 
 		input = "INSERT INTO HISTORY (LINE,DATE,CLOSE_PRICE,OPEN_PRICE,DAY_HIGH,DAY_LOW)"
 			"VALUES("
@@ -130,19 +130,27 @@ void newDB() {
 	
 }
 
-void sql_read_line(int i) {
-	sqlite3 *db;
+void sql_read_line(sqlite3 *db, int i) {
+	
 	char *sql = new char[50];
 	string sqlCom;
 	char *err = 0;
 
-	sqlite3_open("test.db", &db);
+	
 	sqlCom = "select * from history where line = " + to_string(i);
 	strcpy(sql, sqlCom.c_str());
 	sqlite3_exec(db, sql, callback, 0, &err);
 
-	sqlite3_close(db);
+	
 	delete[] sql;
+}
+
+void sql_open_db(sqlite3 **db) {
+	sqlite3_open("test.db", db);
+}
+
+void sql_close_db(sqlite3 *db) {
+	sqlite3_close(db);
 }
 
 ///sql///

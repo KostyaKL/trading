@@ -19,13 +19,11 @@ void main() {
 	exit(0);
 }
 
-void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_price, double &up_day, double &down_day) {
-	char *data= new char[50];
+void trading::mainWin::avgVol(double &up_price, double &down_price, double &up_day, double &down_day) {
+	sqlite3 *dbSql;
 	LINE today, yesterday;
 	double upC, downC;
 	int flag = 1;
-
-	
 
 	up_price = 0;
 	down_price = 0;
@@ -34,13 +32,10 @@ void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_pri
 	upC = 0;
 	downC = 0;
 
-	
+	sql_open_db(&dbSql);
 
-	//data = read_line(file);
-	sql_read_line(1);
-	strcpy(data, ret.c_str());
-	today.update_line(data, 1);
-	//day_bef = yesterday = today;
+	sql_read_line(dbSql, 1);
+	today.update_line(1);
 	for (int i = 2;i <= 4978;) {
 		if (today.getCP() > yesterday.getCP()) {
 			up_price += (today.getCP() - yesterday.getCP());
@@ -49,10 +44,8 @@ void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_pri
 				i++;
 
 				yesterday = today;
-				//data = read_line(file);
-				sql_read_line(i);
-				strcpy(data, ret.c_str());
-				today.update_line(data, i);
+				sql_read_line(dbSql, i);
+				today.update_line(i);
 
 				updateLabel(up_price, up_day, down_price, down_day);
 			}
@@ -65,10 +58,8 @@ void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_pri
 				i++;
 
 				yesterday = today;
-				//data = read_line(file);
-				sql_read_line(i);
-				strcpy(data, ret.c_str());
-				today.update_line(data, i);
+				sql_read_line(dbSql, i);
+				today.update_line(i);
 
 				updateLabel(up_price, up_day, down_price, down_day);
 			}
@@ -76,10 +67,8 @@ void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_pri
 		}
 		else {
 			yesterday = today;
-			//data = read_line(file);
-			sql_read_line(i);
-			strcpy(data, ret.c_str());
-			today.update_line(data, i);
+			sql_read_line(dbSql, i);
+			today.update_line(i);
 			i++;
 		}
 	}
@@ -91,23 +80,21 @@ void trading::mainWin::avgVol(ifstream &file, double &up_price, double &down_pri
 
 	updateLabel(up_price, up_day, down_price, down_day);
 
-	delete[] data;
-
-	
+	sql_close_db(dbSql);
 }
 
 void trading::mainWin::updateLabel(double up_price, double up_day, double down_price, double down_day) {
 	static int i = 0;
 
-	priceMod(up_price);
-	priceMod(down_price);
+	if (!(i++ % 100) || i>4700) {
+		priceMod(up_price);
+		priceMod(down_price);
 
-	upPrice->Text = Convert::ToString(up_price);
-	upDays->Text = Convert::ToString(round(up_day));
-	downPrice->Text = Convert::ToString(down_price);
-	downDays->Text = Convert::ToString(round(down_day));
+		upPrice->Text = Convert::ToString(up_price);
+		upDays->Text = Convert::ToString(round(up_day));
+		downPrice->Text = Convert::ToString(down_price);
+		downDays->Text = Convert::ToString(round(down_day));
 
-	if (!(i++ % 100)) {
 		this->Refresh();
 	}
 }

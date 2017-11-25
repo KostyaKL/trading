@@ -4,8 +4,6 @@
 
 using namespace std;
 
-ifstream db;
-
 namespace trading {
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -30,7 +28,7 @@ namespace trading {
 			//newDB();
 		}
 		
-		void avgVol(ifstream &file, double &up_price, double &down_price, double &up_day, double &down_day);
+		void avgVol(double &up_price, double &down_price, double &up_day, double &down_day);
 
 	protected:
 		/// <summary>
@@ -139,9 +137,7 @@ namespace trading {
 #pragma endregion
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 		double up_price, down_price, up_day, down_day;
-		file_open(db);
-		avgVol(db, up_price, down_price, up_day, down_day);
-		file_close(db);
+		avgVol(up_price, down_price, up_day, down_day);
 	}
 };
 }
